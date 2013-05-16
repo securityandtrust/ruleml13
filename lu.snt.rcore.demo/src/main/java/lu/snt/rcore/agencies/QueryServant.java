@@ -47,6 +47,7 @@ public abstract class QueryServant extends Thread
     protected Iterator rules, body;
     //protected FindPeerResponse findPeerMessage;
     protected QueryResponse queryResponse;
+
     protected int processID;
     protected Drop dr;
 
@@ -72,6 +73,10 @@ public abstract class QueryServant extends Thread
     public abstract void handleConflictingSet() throws Throwable;
 
     public abstract void handleSupportingSet() throws Throwable;
+
+    public int getProcessID() {
+        return processID;
+    }
 
     public void init() {
         currLocalHistory = new LinkedList();

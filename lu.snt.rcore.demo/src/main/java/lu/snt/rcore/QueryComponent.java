@@ -17,6 +17,7 @@ import lu.snt.rcore.knowledge.KnowledgeBase;
 import lu.snt.rcore.logic.Literal;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 @Provides({
@@ -70,8 +71,9 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
             if (o.getClass().equals(Query.class)) {
                 Query x = (Query) o;
                 if (x.getDestinator().trim().equals(this.name.trim())) {
-                    System.out.println(this.name + " has received a new query");
                     int id = getNewId();
+                    System.out.println(this.name + " has received a new query => " + id);
+
                     Drop dr = new Drop();
                     QueryServantSimpleAnswers qssa = new QueryServantSimpleAnswers(this.kb, this, x, id, dr);
                     qsArray.put(id, qssa);
@@ -250,7 +252,22 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
     @Stop
     public void stop() {
-
+        for(Object listElement : qsArray.values() ) {
+            QueryServant servant = (QueryServant)listElement;
+            System.out.println("Query Servalt ID to stop: " + servant.getProcessID());
+            String keyList = "";
+            for(Object key : drArray.keySet()) {
+                keyList += key + ",";
+            }
+            System.out.println("Drop List: " + keyList);
+            Drop drop = (Drop)drArray.get(servant.getProcessID());
+            drop.put(null);
+            try {
+                servant.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
     }
 
     @Update
