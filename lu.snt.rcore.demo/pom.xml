@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>rcore</groupId>
-    <artifactId>rcore</artifactId>
+    <groupId>lu.snt.rcore</groupId>
+    <artifactId>lu.snt.rcore.demo</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kevoree.version>1.9.0-SNAPSHOT</kevoree.version>
+        <kevoree.version>1.9.0</kevoree.version>
         <slf4j.version>1.6.4</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
    	</properties>
@@ -30,7 +30,7 @@
             <artifactId>org.kevoree.tools.annotation.api</artifactId>
             <version>${kevoree.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
@@ -40,7 +40,7 @@
             <artifactId>logback-classic</artifactId>
             <version>1.0.6</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
     </dependencies>
 
     <build>
@@ -62,13 +62,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Felix BnD plugin : allow Bundle packaging : generate OSGi JAR  -->
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.5</version>
-                <extensions>true</extensions>
-            </plugin>
             <!-- Java compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -79,17 +72,6 @@
                     <target>1.6</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>2.0</version>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <groupId>org.kevoree.platform</groupId>
-                <artifactId>org.kevoree.platform.mavenrunner</artifactId>
-                <version>${kevoree.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -107,16 +89,6 @@
             <id>ruleMl.repo</id>
             <url>http://maven.kevoree.org/ruleml</url>
         </repository>
-        <!--
-        <repository>
-            <id>serval-snapshots</id>
-            <url>http://archibald.uni.lu/maven/serval-snapshots</url>
-        </repository>
-        <repository>
-            <id>serval-releases</id>
-            <url>http://archibald.uni.lu/maven/serval-releases/</url>
-        </repository>
-        -->
     </repositories>
 
     <pluginRepositories>
