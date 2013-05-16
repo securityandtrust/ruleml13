@@ -6,7 +6,7 @@
 
     <groupId>lu.snt.rcore</groupId>
     <artifactId>lu.snt.rcore.demo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <kevoree.version>1.9.0</kevoree.version>
