@@ -1,0 +1,55 @@
+ {
+addRepo "http://maven.kevoree.org/release"
+addRepo "http://maven.kevoree.org/ruleml"
+addRepo "http://repo.maven.apache.org/maven2"
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/1.9.0'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/1.9.0'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.fakeDomo/1.9.0'
+merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.0-SNAPSHOT'
+addNode node0:JavaSENode
+updateDictionary node0{logLevel="INFO",coreLogLevel="WARN"}
+ {
+  addComponent Interceptor@node0 : QueryInterceptor {}
+  addComponent SMSModule@node0 : QueryComponent {Name='SMSModule',InitialKnowledgeBaseFile='D:\Dropbox\RuleML13\demo paper\Source Code\Execution\SMSModuleKB.txt'}
+  addComponent Bracelet@node0 : QueryComponent {Name='Bracelet',InitialKnowledgeBaseFile='D:\Dropbox\RuleML13\demo paper\Source Code\Execution\BraceletKB.txt'}
+  addComponent MedProfile@node0 : QueryComponent {Name='MedProfile',InitialKnowledgeBaseFile='D:\Dropbox\RuleML13\demo paper\Source Code\Execution\MedProfileKB.txt'}
+  addComponent ARM@node0 : QueryComponent {Name='ARM',InitialKnowledgeBaseFile='D:\Dropbox\RuleML13\demo paper\Source Code\Execution\ARMKB.txt'}
+  addComponent SMSConsole@node0 : FakeConsole {singleFrame='true'}
+  addComponent HCS@node0 : QueryComponent {Name='HCS',InitialKnowledgeBaseFile='D:\Dropbox\RuleML13\demo paper\Source Code\Execution\HCSKB.txt',InitialTrustFile='D:\Dropbox\RuleML13\demo paper\Source Code\Execution\HCSPref.txt'}
+addChannel QueriesOut : defMSG {}
+addChannel QueriesIn : defMSG {}
+addChannel ConsoleIn : defMSG {}
+addChannel ConsoleOut : defMSG {}
+bind SMSModule.QueryOut@node0 => QueriesOut
+bind Bracelet.QueryOut@node0 => QueriesOut
+bind MedProfile.QueryOut@node0 => QueriesOut
+bind ARM.QueryOut@node0 => QueriesOut
+bind HCS.QueryOut@node0 => QueriesOut
+bind Interceptor.QueryIn@node0 => QueriesOut
+bind SMSModule.QueryIn@node0 => QueriesIn
+bind Interceptor.QueryOut@node0 => QueriesIn
+bind Bracelet.QueryIn@node0 => QueriesIn
+bind MedProfile.QueryIn@node0 => QueriesIn
+bind ARM.QueryIn@node0 => QueriesIn
+bind HCS.QueryIn@node0 => QueriesIn
+bind SMSConsole.textEntered@node0 => ConsoleIn
+bind SMSModule.ConsoleIn@node0 => ConsoleIn
+bind SMSModule.ConsoleOut@node0 => ConsoleOut
+bind SMSConsole.showText@node0 => ConsoleOut
+updateDictionary QueriesOut 
+updateDictionary QueriesIn 
+updateDictionary ConsoleIn 
+updateDictionary ConsoleOut 
+updateDictionary Interceptor@node0 
+updateDictionary SMSModule@node0 
+updateDictionary Bracelet@node0 
+updateDictionary MedProfile@node0 
+updateDictionary ARM@node0 
+updateDictionary SMSConsole@node0 
+updateDictionary HCS@node0 
+}
+
+addGroup sync:BasicGroup
+addToGroup sync node0
+updateDictionary sync{port="8000",ssl="false",ip="0.0.0.0"}@node0
+}
