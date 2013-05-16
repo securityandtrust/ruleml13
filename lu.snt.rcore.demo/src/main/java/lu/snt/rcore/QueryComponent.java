@@ -72,7 +72,7 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
                 Query x = (Query) o;
                 if (x.getDestinator().trim().equals(this.name.trim())) {
                     int id = getNewId();
-                    System.out.println(this.name + " has received a new query => " + id);
+                    System.out.println(this.name + " has received a new query"  );
 
                     Drop dr = new Drop();
                     QueryServantSimpleAnswers qssa = new QueryServantSimpleAnswers(this.kb, this, x, id, dr);
@@ -254,12 +254,6 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
     public void stop() {
         for(Object listElement : qsArray.values() ) {
             QueryServant servant = (QueryServant)listElement;
-            System.out.println("Query Servalt ID to stop: " + servant.getProcessID());
-            String keyList = "";
-            for(Object key : drArray.keySet()) {
-                keyList += key + ",";
-            }
-            System.out.println("Drop List: " + keyList);
             Drop drop = (Drop)drArray.get(servant.getProcessID());
             drop.put(null);
             try {
