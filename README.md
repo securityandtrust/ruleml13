@@ -1,5 +1,5 @@
 #R-CoRe Demonstration For the RuleML'13 Conference
-
+This repository serves the demonstration of the implementation of CDL using [Kevoree](http://www.kevoree.org).
 We propose here three ways to run the demonstration, from easy to advanced, requiring each time a bit more tools to run.
 
 ## Run the Demonstration (easy)
