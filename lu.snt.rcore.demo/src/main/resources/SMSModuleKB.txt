@@ -1,0 +1,3 @@
+#Sms module
+
+M1: emergency_HCS -> dispatchSMS_SMSModule

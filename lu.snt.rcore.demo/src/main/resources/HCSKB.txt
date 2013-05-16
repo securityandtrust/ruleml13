@@ -1,0 +1,4 @@
+#HCS Knowledge base
+
+M1: normalPulse_Bracelet-> ~emergency_HCS
+M2: lyingOnFloor_ARM, proneToHA_MedProfile -> emergency_HCS

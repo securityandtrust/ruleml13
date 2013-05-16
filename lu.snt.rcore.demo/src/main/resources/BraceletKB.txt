@@ -1,0 +1,2 @@
+#Knowledge base of bracelet
+L1: ->normalPulse_local
