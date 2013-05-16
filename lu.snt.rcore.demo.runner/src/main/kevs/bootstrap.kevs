@@ -9,7 +9,7 @@ merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/
 merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.basicGossiper/1.9.0'
 merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.fakeDomo/1.9.0'
 merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/1.9.0'
-merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.0-SNAPSHOT'
+merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.0'
 addNode node0:JavaSENode
 updateDictionary node0{logLevel="INFO",coreLogLevel="WARN"}
  {
