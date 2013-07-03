@@ -4,11 +4,11 @@ merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChan
 merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.1-SNAPSHOT'
 
 addNode node0:JavaSENode
-addComponent SMSModule@node0:QueryComponent {Name="SMSModule", InitialKnowledgeBaseFile="D:\Dropbox\RuleML13\demo paper\Source Code\Execution\SMSModuleKB.txt"}
-addComponent ARM@node0:QueryComponent {Name="ARM", InitialKnowledgeBaseFile="D:\Dropbox\RuleML13\demo paper\Source Code\Execution\ARMKB.txt"}
-addComponent Bracelet@node0:QueryComponent {Name="Bracelet", InitialKnowledgeBaseFile="D:\Dropbox\RuleML13\demo paper\Source Code\Execution\BraceletKB.txt"}
-addComponent HCS@node0:QueryComponent {Name="HCS"         , InitialKnowledgeBaseFile="D:\Dropbox\RuleML13\demo paper\Source Code\Execution\HCSKB.txt", InitialTrustFile="D:\Dropbox\RuleML13\demo paper\Source Code\Execution\HCSPref.txt"}
-addComponent MedProfile@node0:QueryComponent {Name="MedProfile", InitialKnowledgeBaseFile="D:\Dropbox\RuleML13\demo paper\Source Code\Execution\MedProfileKB.txt"}
+addComponent SMSModule@node0:QueryComponent {Name="SMSModule", InitialKnowledgeBaseFile="SMSModuleKB.txt"}
+addComponent ARM@node0:QueryComponent {Name="ARM", InitialKnowledgeBaseFile="ARMKB.txt"}
+addComponent Bracelet@node0:QueryComponent {Name="Bracelet", InitialKnowledgeBaseFile="BraceletKB.txt"}
+addComponent HCS@node0:QueryComponent {Name="HCS"         , InitialKnowledgeBaseFile="HCSKB.txt", InitialTrustFile="HCSPref.txt"}
+addComponent MedProfile@node0:QueryComponent {Name="MedProfile", InitialKnowledgeBaseFile="MedProfileKB.txt"}
 addComponent Interceptor@node0:QueryInterceptor
 
 addComponent SMSConsole@node0:FakeConsole
