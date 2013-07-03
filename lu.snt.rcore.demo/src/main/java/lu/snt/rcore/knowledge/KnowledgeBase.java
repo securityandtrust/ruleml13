@@ -8,6 +8,7 @@ package lu.snt.rcore.knowledge;
  * To change this template use File | Settings | File Templates.
  */
 
+import lu.snt.rcore.QueryInterface;
 import lu.snt.rcore.logic.Literal;
 import lu.snt.rcore.logic.Rule;
 
@@ -39,6 +40,19 @@ public class KnowledgeBase
         return knowledgeSet.size() + "";
     }
 
+
+    public void setTrustOrder(String s) {
+        String [] sArr = s.split(",");
+        ArrayList c = new ArrayList();
+
+        for(int i=0;i<sArr.length;i++){
+            c.add(sArr[i].trim());
+        }
+        this.trustOrder = new ArrayList();
+        this.trustOrder.addAll(c);
+        //System.out.println(this.trustOrder.size());
+    }
+
     public void setTrustOrder(Collection c) {
         this.trustOrder = new ArrayList();
         this.trustOrder.addAll(c);
@@ -60,117 +74,156 @@ public class KnowledgeBase
     }
 
 
-    public void loadKbFromFile(String filename, String peerName) {
-        BufferedReader br;
-        String processedLine, literal;
+    public void AddLine(String processedLine, String peerName) throws Throwable {
+
+        try {
+
+            String literal;
         String[] lineParticles, ruleParts, body, literalString, tmpArray, tmpArray2;
         LinkedList bodyList;
         int i;
         String rule;
         boolean sign;
         char setName[] = new char[1];
+
+        if (processedLine.length() >= 5) {
+            if (processedLine.charAt(0) != '#') {
+                lineParticles = processedLine.split(":");
+                lineParticles[0]=lineParticles[0].trim();
+                rule = lineParticles[1].trim();
+                ruleParts = rule.split("->");
+                ruleParts[0] = ruleParts[0].trim();
+                ruleParts[1] = ruleParts[1].trim();
+
+               // System.out.println(ruleParts[0].length());
+                if (ruleParts[0].length() == 0) {
+
+                    sign = getSign(ruleParts[1]);
+                   // System.out.println(" * " + ruleParts[1] + " " + sign);
+                    literalString = ruleParts[1].split("~");
+                    literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
+                    tmpArray2 = literal.split("_");
+
+                  //  System.out.println(" + " + literal + " " + sign);
+
+
+                    if (tmpArray2[1].equals("local")) {
+                        this.addLocalLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
+                   //      System.out.println("p " + tmpArray2[0]);
+                    } else if (tmpArray2[1].equals(peerName)) {
+                        this.addRemoteLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
+                    }
+
+                    setName[0]  = lineParticles[0].charAt(0);
+                    if( setName[0]!='L' &&setName[0]!='M' )
+                        throw new Exception("Invalid set Name");
+                   // System.out.println("sets :"+ setName[0]+"");
+                    this.addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0], lineParticles[0]));
+
+                  //  System.out.println(" -p  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
+                } else {
+                    body = ruleParts[0].split(",");
+                    bodyList = new LinkedList();
+
+                    for (i = 0; i < body.length; i++) {
+                        body[i] = body[i].trim();
+                        sign = getSign(body[i]);
+                        literalString = body[i].split("~");
+                        literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
+                        tmpArray = literal.split("_");
+                        bodyList.add(new Literal(tmpArray[0], tmpArray[1], sign));
+
+                    //     System.out.println(" + " + literal + " " + sign);
+
+                        if (tmpArray[1].equals("local")) {
+                            addLocalLiteral(new Literal(tmpArray[0], tmpArray[1], sign));
+                      //      System.out.println(tmpArray[0]);
+                        } else if (tmpArray[1].equals(peerName)) {
+                            this.addRemoteLiteral(new Literal(tmpArray[0], tmpArray[1], sign));
+                        }
+
+
+                     //    System.out.println(" --" + tmpArray[0] +" "+ tmpArray[1] + " "+sign);
+                    }
+
+                    literalString = null;
+                    ruleParts[0] = ruleParts[0].trim();
+                    ruleParts[1] = ruleParts[1].trim();
+
+                    sign = getSign(ruleParts[1]);
+                  //   System.out.println(" _ " + ruleParts[1] + " " + sign);
+                    literalString = ruleParts[1].split("~");
+                    literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
+                    tmpArray2 = literal.split("_");
+
+                  //   System.out.println(" + " + literal + " " + sign);
+
+
+                    if (tmpArray2[1].equals("local")) {
+                        addLocalLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
+                 //        System.out.println(tmpArray2[0]);
+                    } else if (tmpArray2[1].equals(peerName)) {
+                        this.addRemoteLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
+                    }
+
+                  //       System.out.println(" __" + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
+                  //       System.out.println(sign + " " + ((literalString.length>1) ? literalString[1]:literalString[0]));
+
+                    setName[0] = lineParticles[0].charAt(0);
+                 //       System.out.println("Before Error");
+                    addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0],
+                            lineParticles[0], bodyList));
+                  //       System.out.println("After Error");
+                 //    System.out.println(" --  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
+                     // System.out.println("File "+ filename+ " loaded successfully");
+                }
+            }
+        }
+
+
+        //kb.print();
+        }catch (Throwable t) {
+        throw(t);
+    }
+    }
+
+    public void loadKbFromFile(String filename, String peerName) {
+        BufferedReader br;
+        String processedLine;
+
         try {
-
             br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)));
-
+            //br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             while (br.ready()) {
                 processedLine = br.readLine();
-
-                if (processedLine.length() >= 5) {
-                    if (processedLine.charAt(0) != '#') {
-                        lineParticles = processedLine.split(":");
-                        rule = lineParticles[1].trim();
-                        ruleParts = rule.split("->");
-                        ruleParts[0] = ruleParts[0].trim();
-                        ruleParts[1] = ruleParts[1].trim();
-
-                        //System.out.println(ruleParts[0].length());
-                        if (ruleParts[0].length() == 0) {
-
-                            sign = getSign(ruleParts[1]);
-                            //System.out.println(" * " + ruleParts[1] + " " + sign);
-                            literalString = ruleParts[1].split("~");
-                            literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
-                            tmpArray2 = literal.split("_");
-
-                            //System.out.println(" + " + literal + " " + sign);
-
-
-                            if (tmpArray2[1].equals("local")) {
-                                this.addLocalLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
-                                // System.out.println("p " + tmpArray2[0]);
-                            } else if (tmpArray2[1].equals(peerName)) {
-                                this.addRemoteLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
-                            }
-
-                            setName[0] = lineParticles[0].charAt(0);
-                            // System.out.println("sets :"+ setName[0]+"");
-                            this.addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0], lineParticles[0]));
-
-                            //System.out.println(" -p  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
-                        } else {
-                            body = ruleParts[0].split(",");
-                            bodyList = new LinkedList();
-
-                            for (i = 0; i < body.length; i++) {
-                                body[i] = body[i].trim();
-                                sign = getSign(body[i]);
-                                literalString = body[i].split("~");
-                                literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
-                                tmpArray = literal.split("_");
-                                bodyList.add(new Literal(tmpArray[0], tmpArray[1], sign));
-
-                                //  System.out.println(" + " + literal + " " + sign);
-
-                                if (tmpArray[1].equals("local")) {
-                                    addLocalLiteral(new Literal(tmpArray[0], tmpArray[1], sign));
-                                    //System.out.println(tmpArray[0]);
-                                } else if (tmpArray[1].equals(peerName)) {
-                                    this.addRemoteLiteral(new Literal(tmpArray[0], tmpArray[1], sign));
-                                }
-
-
-                                //System.out.println(" --" + tmpArray[0] +" "+ tmpArray[1] + " "+sign);
-                            }
-
-                            literalString = null;
-                            ruleParts[0] = ruleParts[0].trim();
-                            ruleParts[1] = ruleParts[1].trim();
-
-                            sign = getSign(ruleParts[1]);
-                            // System.out.println(" _ " + ruleParts[1] + " " + sign);
-                            literalString = ruleParts[1].split("~");
-                            literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
-                            tmpArray2 = literal.split("_");
-
-                            //System.out.println(" + " + literal + " " + sign);
-
-
-                            if (tmpArray2[1].equals("local")) {
-                                addLocalLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
-                                // System.out.println(tmpArray2[0]);
-                            } else if (tmpArray2[1].equals(peerName)) {
-                                this.addRemoteLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
-                            }
-
-                            //    System.out.println(" __" + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
-                            //    System.out.println(sign + " " + ((literalString.length>1) ? literalString[1]:literalString[0]));
-
-                            setName[0] = lineParticles[0].charAt(0);
-                            //    System.out.println("Before Error");
-                            addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0],
-                                    lineParticles[0], bodyList));
-                            //    System.out.println("After Error");
-                            //System.out.println(" --  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
-                            // System.out.println("File "+ filename+ " loaded successfully");
-                        }
-                    }
-                }
+                AddLine(processedLine, peerName);
             }
 
             //kb.print();
         } catch (Throwable t) {
             //t.printStackTrace();
+        }
+    }
+
+
+
+
+    public void printTrustOrder(QueryInterface qr){
+        if(trustOrder!=null && trustOrder.size()!=0)
+        {
+            String s="";
+            Iterator iter = trustOrder.iterator();
+            while(iter.hasNext())
+            {
+                s+= (String) iter.next() +" ,";
+            }
+            s=s.substring(0,s.length()-2);
+            qr.consoleOutput(s);
+
+        }
+        else
+        {
+            qr.consoleOutput("No trust order found");
         }
     }
 
@@ -181,8 +234,7 @@ public class KnowledgeBase
         String processedLine;
 
         try {
-
-            br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             while (br.ready()) {
                 processedLine = br.readLine();
                 if (processedLine.length() > 2) {
@@ -327,6 +379,136 @@ public class KnowledgeBase
         return (false);
     }
 
+    public void removeRule(QueryInterface qr, String rNum){
+        if(rNum.charAt(0)=='L'||rNum.charAt(0)=='M')
+        {
+            String cc = rNum.substring(0,1);
+            rNum=rNum.substring(1,rNum.length());
+            int r;
+            try
+            {
+                  r=Integer.parseInt(rNum);
+
+                int counter;
+                Rule rule;
+                String s;
+                Hashtable h;
+                LinkedList rules;
+                counter=0;
+                if (knowledgeSet.containsKey(cc)) {
+                    h = (Hashtable) knowledgeSet.get(cc);
+                    Iterator iter = h.values().iterator();
+                    while (iter.hasNext()) {
+                        rules= (LinkedList)   iter.next();
+                        Iterator iter2 = rules.iterator();
+                        while (iter2.hasNext()) {
+                            if(counter==r)
+                            {
+                                rule = (Rule) iter2.next();
+                                rules.remove(rule) ;
+                                qr.consoleOutput("Rule Removed!");
+                                return;
+                            }
+                            else
+                            {
+                                iter2.next();
+                            }
+
+                            counter++;
+                        }
+
+                    }
+                    qr.consoleOutput("Cannot find the rule!");
+                    return;
+                }
+
+            }
+            catch(Exception x)
+            {
+                qr.consoleOutput("Failed to Remove");
+                return;
+            }
+
+        }
+        else if (rNum.charAt(0)=='M')
+        {
+            rNum=rNum.substring(1,rNum.length());
+            int r;
+            try
+            {
+                r=Integer.parseInt(rNum);
+
+            }
+            catch(Exception x)
+            {
+                qr.consoleOutput("Failed to Remove");
+                return;
+            }
+        }
+        else
+        {
+            qr.consoleOutput("Invalid arguments");
+            return;
+        }
+
+    }
+
+    public void listRules(QueryInterface qr)
+    {
+        int counter;
+        Rule rule;
+        String s;
+        Hashtable h;
+        LinkedList rules;
+        boolean tag;
+
+
+        tag=true;
+        counter=0;
+        if (knowledgeSet.containsKey("L")) {
+            h = (Hashtable) knowledgeSet.get("L");
+            Iterator iter = h.values().iterator();
+            while (iter.hasNext()) {
+                rules= (LinkedList)   iter.next();
+                Iterator iter2 = rules.iterator();
+                while (iter2.hasNext()) {
+                    if(tag)
+                    {
+                        qr.consoleOutput("Local rules:");
+                        tag=false;
+                    }
+                 rule = (Rule) iter2.next();
+                    s="L"+counter+": "+rule.print();
+                    qr.consoleOutput(s);
+                    counter++;
+                }
+            }
+        }
+
+        tag=true;
+        counter=0;
+        if (knowledgeSet.containsKey("M")) {
+            h = (Hashtable) knowledgeSet.get("M");
+            Iterator iter = h.values().iterator();
+            while (iter.hasNext()) {
+                rules= (LinkedList)   iter.next();
+                Iterator iter2 = rules.iterator();
+                while (iter2.hasNext()) {
+                    if(tag)
+                    {
+                        qr.consoleOutput("Remote rules:");
+                        tag=false;
+                    }
+                    rule = (Rule) iter2.next();
+                    s="M"+counter+": "+rule.print();
+                    qr.consoleOutput(s);
+                    counter++;
+                }
+            }
+        }
+
+
+    }
 
     public Collection getSupportingRulesByHeadLiteral(Literal l)
             throws Throwable {
@@ -419,15 +601,24 @@ public class KnowledgeBase
             return (false);
         }
 
-
+           try
+           {
         storedRule = (Rule) rules.getFirst();
+
 
         if ((storedRule.getHead()).getSign() == l.getSign())
             return (true);
         else
             return (false);
+           }
+           catch(Exception x )
+           {
+               return false;
+           }
 
     }
+
+
 
     // SetA is the augmented one
     public void uniteSets(Collection setA, Collection setB) {

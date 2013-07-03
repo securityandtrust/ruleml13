@@ -35,7 +35,7 @@ public class Launcher {
             System.out.println("Done.");
 
             System.out.println("Downloading Bootstrap model...");
-            URL bootstrapModel = new URL("https://github.com/securityandtrust/ruleml13/raw/master/lu.snt.rcore.demo.runner/src/main/kevs/bootstrap.kevs");
+            URL bootstrapModel = new URL("https://github.com/securityandtrust/ruleml13/raw/master/lu.snt.rcore.demo.runner/src/main/kevs/bootstrap.1.1.kevs");
             ReadableByteChannel rbcModel = Channels.newChannel(bootstrapModel.openStream());
             File model = File.createTempFile("bootstrap" + System.currentTimeMillis(),".kevs");
             FileOutputStream fos2 = new FileOutputStream(model);

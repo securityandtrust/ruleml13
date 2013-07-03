@@ -8,22 +8,21 @@ package lu.snt.rcore;
  * To change this template use File | Settings | File Templates.
  */
 
+import lu.snt.rcore.agencies.*;
+import lu.snt.rcore.knowledge.KnowledgeBase;
+import lu.snt.rcore.logic.Literal;
 import org.kevoree.ContainerRoot;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.MessagePort;
 import org.kevoree.framework.service.handler.ModelListenerAdapter;
-import lu.snt.rcore.agencies.*;
-import lu.snt.rcore.knowledge.KnowledgeBase;
-import lu.snt.rcore.logic.Literal;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 @Provides({
 
         @ProvidedPort(name = "QueryIn", type = PortType.MESSAGE),
-        @ProvidedPort(name = "ConsoleIn", type = PortType.MESSAGE)
+        @ProvidedPort(name = "ConsoleIn", type = PortType.MESSAGE),
 })
 
 @Requires({
@@ -34,7 +33,7 @@ import java.util.LinkedList;
 @DictionaryType({
         @DictionaryAttribute(name = "Name", optional = false),
         @DictionaryAttribute(name = "InitialKnowledgeBaseFile", optional = true),
-        @DictionaryAttribute(name = "InitialTrustFile", optional = true)
+        @DictionaryAttribute(name = "InitialTrustFile", optional = true),
 
 })
 //((MessagePort)getPortByName("QueryOut")).process(object data);
@@ -71,9 +70,8 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
             if (o.getClass().equals(Query.class)) {
                 Query x = (Query) o;
                 if (x.getDestinator().trim().equals(this.name.trim())) {
+                    System.out.println(this.name + " has received a new query");
                     int id = getNewId();
-                    System.out.println(this.name + " has received a new query"  );
-
                     Drop dr = new Drop();
                     QueryServantSimpleAnswers qssa = new QueryServantSimpleAnswers(this.kb, this, x, id, dr);
                     qsArray.put(id, qssa);
@@ -105,8 +103,82 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
     @Port(name = "ConsoleIn")
     public void incomingConsole(Object o) {
 
-        String s = (String) o;
-        initiateQuery(s);
+       String s = (String) o;
+       s = s.trim();
+
+
+        if(s.startsWith("-"))
+        {
+            s=s.substring(1,s.length());
+            String[] particles = s.split(" ");
+            particles[0]=particles[0].trim();
+
+            if (particles[0].equals("help"))
+            {
+               consoleOutput("To list all the knowledge base rules, write -list");
+               consoleOutput("To remove a local/remote rule, write -remove L# , or -remove M#" );
+               consoleOutput("To add a local rule, write for ex, -add L0:-> ~emergency_local");
+               consoleOutput("To add a remote rule, write for ex, -add M0: test1_ARM, test2_MedProfile -> test3_HCS");
+               consoleOutput("To list the preference order, write: -pref");
+               consoleOutput("To change the preference order, write: -setpref ARM, HCS, Bracelet");
+                // consoleOutput("To quit, write -quit");
+            }
+            else if (particles[0].equals("add"))
+            {
+                s=s.substring(s.indexOf("add")+3,s.length()).trim();
+
+                try {
+                    //consoleOutput("testing: "+s);
+                    kb.AddLine(s,this.name);
+                    consoleOutput("Rule added");
+                } catch (Throwable throwable) {
+                    consoleOutput("Error adding the rule");
+                }
+
+            }
+            else if (particles[0].equals("remove"))
+            {
+                try{
+              kb.removeRule(this, particles[1].trim());
+                }
+                catch(Exception ex)
+                {
+                    consoleOutput("Invalid command");
+                }
+            }
+
+            else if (particles[0].equals("list"))
+            {
+                kb.listRules(this);
+            }
+            else if (particles[0].equals("pref"))
+            {
+                kb.printTrustOrder(this);
+            }
+            else if (particles[0].equals("setpref"))
+            {
+                s=s.substring(s.indexOf("setpref")+7,s.length()).trim();
+                try{
+                    kb.setTrustOrder(s);
+                    consoleOutput("Trust order set!");
+                    kb.printTrustOrder(this);
+                }
+                catch (Exception ex                        )
+                {
+                    consoleOutput("Error while setting the trust order");
+                }
+
+            }
+            else
+            {
+                consoleOutput("Unknown command " + particles[0]   );
+            }
+
+        }
+        else
+        {
+            initiateQuery(s);
+        }
     }
 
     //To send queries to other components
@@ -118,7 +190,7 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
     }
 
     //To send Message to Console
-    private void consoleOutput(Object o) {
+    public void consoleOutput(Object o) {
         MessagePort prodPort = getPortByName("ConsoleOut", MessagePort.class);
         if (prodPort != null) {
             prodPort.process(o);
@@ -144,10 +216,8 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
     private void initiateQuery(String s) {
         try {
-            s = s.trim();
+
             int id = getNewId();
-
-
             boolean sign = Literal.getSign(s);
             String[] literalString = s.split("~");
 
@@ -202,11 +272,7 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
     @Start
     public void start() {
-
         this.name = (String) getDictionary().get("Name");
-
-        System.out.println("Starting " + this.name + " query component");
-
         try {
             String initKb = (String) getDictionary().get("InitialKnowledgeBaseFile");
             String initTrust = (String) getDictionary().get("InitialTrustFile");
@@ -215,10 +281,12 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
             kb.createNewSet(KnowledgeBase.localSetName); // set for local rules
             kb.createNewSet(KnowledgeBase.remoteSetName); // set for mapping rules
 
+
             if (initKb != null && initKb != "") {
                 kb.loadKbFromFile(initKb, this.name);
                 consoleOutput("Kb loaded:");
                 consoleOutput(kb.getAllLiteral());
+                consoleOutput("To get help about the commands write -help");
             }
             if (initTrust != null && initTrust != "") {
                 kb.loadTrustOrderFromFile(initTrust);
@@ -252,16 +320,7 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
     @Stop
     public void stop() {
-        for(Object listElement : qsArray.values() ) {
-            QueryServant servant = (QueryServant)listElement;
-            Drop drop = (Drop)drArray.get(servant.getProcessID());
-            drop.put(null);
-            try {
-                servant.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
+
     }
 
     @Update

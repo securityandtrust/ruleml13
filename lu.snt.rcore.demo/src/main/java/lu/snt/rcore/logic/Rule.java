@@ -56,5 +56,26 @@ public class Rule {
         return (new String(this.mappingType));
     }
 
+    public String print() {
+        String s="";
+
+        if(body!=null)
+        {
+        Iterator iter = body.iterator();
+        boolean temp=false;
+
+        while (iter.hasNext()) {
+             Literal l = (Literal) iter.next();
+            s+= l.fullName()+", ";
+            temp=true;
+        }
+        if(temp)
+            s=s.substring(0,s.length()-2) ;
+        }
+        s+=" -> ";
+        s+= head.fullName();
+        return s;
+    }
+
     //To implement compare Rules to each other.
 }

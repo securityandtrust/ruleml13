@@ -127,9 +127,6 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                         QI.sendQueryToPeer(q);
                         queryResponse = this.dr.take();
 
-                        if(queryResponse == null) {
-                            return;
-                        }
 
                         if (queryResponse.getReturnValue() == false) {
                             flag = true;

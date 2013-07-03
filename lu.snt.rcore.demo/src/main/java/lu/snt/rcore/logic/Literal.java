@@ -56,6 +56,13 @@ public class Literal
     public String toString() {
         return (new String(name));
     }
+
+    public String fullName() {
+        if (!this.sign )
+            return ("~" + name+"_"+location);
+        else
+            return (name+"_"+location);
+    }
 }
 
 

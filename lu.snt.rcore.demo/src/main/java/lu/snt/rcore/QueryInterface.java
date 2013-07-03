@@ -20,4 +20,6 @@ public interface QueryInterface {
 
     public void sendQueryToPeer(Query q);
 
+    public void consoleOutput(Object o);
+
 }

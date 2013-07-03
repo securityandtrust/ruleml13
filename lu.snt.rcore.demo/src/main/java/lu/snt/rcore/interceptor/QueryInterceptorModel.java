@@ -12,6 +12,8 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxEdgeLabelLayout;
 import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxEdgeStyle;
 import com.mxgraph.view.mxGraph;
 import lu.snt.rcore.agencies.Query;
 import lu.snt.rcore.agencies.QueryResponse;
@@ -19,6 +21,7 @@ import lu.snt.rcore.agencies.QueryResponse;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class QueryInterceptorModel {
     private boolean demoMode;
