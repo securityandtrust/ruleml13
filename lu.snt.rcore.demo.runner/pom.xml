@@ -21,7 +21,7 @@
                 <artifactId>org.kevoree.platform.mavenrunner</artifactId>
                 <version>${kevoree.version}</version>
                 <configuration>
-                    <model>${basedir}/src/main/kevs/bootstrap.kevs</model>
+                    <model>${basedir}/src/main/kevs/bootstrap.1.1.kevs</model>
                     <targetNode>node0</targetNode>
                     <viaGroup>sync</viaGroup>
                 </configuration>
