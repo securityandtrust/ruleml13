@@ -234,7 +234,8 @@ public class KnowledgeBase
         String processedLine;
 
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+            br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)));
+            //br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             while (br.ready()) {
                 processedLine = br.readLine();
                 if (processedLine.length() > 2) {
