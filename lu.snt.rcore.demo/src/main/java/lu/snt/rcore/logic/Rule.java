@@ -45,7 +45,7 @@ public class Rule {
     }
 
     public String getHeadName() {
-        return (new String(this.head.getName()));
+        return this.head.getSignWithName();
     }
 
     public Literal getHead() {

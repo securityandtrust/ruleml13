@@ -172,7 +172,6 @@ public class KnowledgeBase
                     setName[0] = lineParticles[0].charAt(0);
                  //       System.out.println("Before Error");
                     addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0],
-                            lineParticles[0], bodyList));
                   //       System.out.println("After Error");
                  //    System.out.println(" --  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
                      // System.out.println("File "+ filename+ " loaded successfully");
@@ -577,9 +576,6 @@ public class KnowledgeBase
 
         h = (Hashtable) knowledgeSet.get(setName);
         rules = (LinkedList) h.get(l.getName());
-
-        if (rules == null)
-            return (new LinkedList());
 
         return (rules);
     }

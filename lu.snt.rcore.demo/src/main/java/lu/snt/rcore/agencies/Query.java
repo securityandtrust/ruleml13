@@ -19,6 +19,7 @@ import java.util.Collection;
 public class Query implements Serializable {
     private Literal query;
     private Answer localAnswer;
+    private boolean initiatorIsConsole;
 
 
     private String nameowner;  //the component that created this query
@@ -29,10 +30,11 @@ public class Query implements Serializable {
     private Collection conflMappingsSet;
     private Collection history;
 
-    public Query(String owner, int idProcess, String destination, Literal query, boolean localAnswer, Collection ss, Collection cs, Collection history) {
+    public Query(String owner, int idProcess, boolean initiatorIsConsole, String destination, Literal query, boolean localAnswer, Collection ss, Collection cs, Collection history) {
         this.nameowner = owner;
         this.idprocess = idProcess;
         this.namedestination = destination;
+        this.initiatorIsConsole = initiatorIsConsole;
 
         this.query = query;
         this.suppMappingsSet = ss;
@@ -41,16 +43,20 @@ public class Query implements Serializable {
         this.history = history;
     }
 
-    public Query(String owner, String destination, int idProcess, Literal query, Answer localAnswer, Collection ss, Collection cs, Collection history) {
+  /*  public Query(String owner, String destination, int idProcess, boolean initiatorIsConsole, Literal query, Answer localAnswer,  Collection ss, Collection cs, Collection history) {
         this.nameowner = owner;
         this.idprocess = idProcess;
         this.namedestination = destination;
-
+        this.initiatorIsConsole = initiatorIsConsole;
         this.query = query;
         this.suppMappingsSet = ss;
         this.conflMappingsSet = cs;
         this.localAnswer = localAnswer;
         this.history = history;
+    }   */
+
+    public boolean getInitiatorIsConsole(){
+        return initiatorIsConsole;
     }
 
     public String getOwner() {

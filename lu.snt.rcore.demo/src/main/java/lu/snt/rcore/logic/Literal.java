@@ -63,6 +63,10 @@ public class Literal
         else
             return (name+"_"+location);
     }
+
+    public String fullNameUnsigned() {
+        return (name+"_"+location);
+    }
 }
 
 

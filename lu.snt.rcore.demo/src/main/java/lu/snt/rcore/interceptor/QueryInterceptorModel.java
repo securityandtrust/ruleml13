@@ -106,7 +106,7 @@ public class QueryInterceptorModel {
             Query x = (Query) o;
             sender = x.getOwner();
             receiver = x.getDestinator();
-            literal = x.getLiteral().getName();
+            literal = x.getLiteral().getSignWithName();
 
             mxCell cellSender, cellReceiver;
 
@@ -137,7 +137,7 @@ public class QueryInterceptorModel {
 
             receiver = q.getOwner();
             sender = q.getDestinator();
-            literal = q.getLiteral().getName();
+            literal = q.getLiteral().getSignWithName();
             String response;
 
             String color;

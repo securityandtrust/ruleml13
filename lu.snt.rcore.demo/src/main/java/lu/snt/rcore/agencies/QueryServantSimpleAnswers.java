@@ -49,28 +49,32 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                 return;
             }
             */
-            //System.out.println("you are querying about: "+ queryLiteral);
+           // System.out.println("you are querying about: "+ queryLiteral);
             if (kb.isRuleInside(KnowledgeBase.localSetName, queryLiteral)) {
-                //System.out.println("First Step");
+               // System.out.println("First Step");
                 localAnswer = new MyBoolean(false);
-                //  System.out.println("Sec Step");
+              //    System.out.println("Sec Step");
                 currLocalHistory.add(queryLiteral);
-                //   System.out.println("third Step");
+              //    System.out.println("third Step");
                 local_alg(queryLiteral, currLocalHistory, localAnswer);
-                // System.out.println("4 Step");
+             // System.out.println("4 Step");
                 if (localAnswer.getMyBoolean()) {
-                    //System.out.println("  Answer: " + localAnswer.getMyBoolean());
+             //       System.out.println("local true");
+             //       System.out.println("  Answer: " + localAnswer.getMyBoolean());
                     //incQueriesCache.rememberLiteral(queryLiteral, localAnswer, null);
-                    // System.out.println("Result Answer: " + localAnswer.getMyBoolean());
+             //      System.out.println("Result Answer: " + localAnswer.getMyBoolean());
                     QI.sendResults(new QueryResponse(query, localAnswer, null, null), this.processID);
                     return;
                 }
             }
+       //     System.out.println("reverse Step");
 
             queryLiteral.reverseSign();
 
 
             if (kb.isRuleInside("L", queryLiteral)) {
+
+           //     System.out.println("inside1 Step");
 
                 localAnswer = new MyBoolean(false);
                 currLocalHistory.clear();
@@ -81,7 +85,6 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                     localAnswer.setMyBoolean(false);
                     queryLiteral.reverseSign();
                     //incQueriesCache.rememberLiteral(queryLiteral, localAnswer, null);
-                    queryLiteral.reverseSign();
                     QI.sendResults(new QueryResponse(query, localAnswer, null, null), this.processID);
                     return;
                 }
@@ -91,6 +94,7 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
 
             queryLiteral.reverseSign();
 
+           // System.out.println("reverse1 Step");
 
             ////////////////////////////////////////////////////////////////////////
             ////////////// distributed reasoning for supporting rules //////////////
@@ -123,8 +127,23 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                         conflForLiteral = new LinkedList();
                         System.out.println("\tRequesting literal: " + literal.getSignWithName() + "  from: " + literal.getLocation() + "\n");
 
-                        Query q = new Query(this.QI.getName(), this.processID, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
-                        QI.sendQueryToPeer(q);
+                        boolean local=false;
+                       if(literal.getLocation().equals("local")|| literal.getLocation().equals(this.QI.getName()))
+                           local =true;
+
+                        Query q;
+                        if(local)
+                        {
+                            q = new Query(this.QI.getName(), this.processID,false, this.QI.getName(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                            QI.incomingQuery(q);
+                           // QI.sendQueryToPeer(q);//to test
+                        }
+                        else
+                        {
+                            q = new Query(this.QI.getName(), this.processID,false, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                            QI.sendQueryToPeer(q);
+                        }
+
                         queryResponse = this.dr.take();
 
 
@@ -148,6 +167,7 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
             }
 
             if (inheritedSupportingRules.size() == 0) {
+                System.out.println("Sending results");
                 //incQueriesCache.rememberLiteral(queryLiteral, new MyBoolean(false), null);
                 this.QI.sendResults(new QueryResponse(query, new MyBoolean(false), null, null), this.processID);
                 return;
@@ -189,7 +209,7 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                         System.out.println("\tRequesting literal: " + literal.getSignWithName() + "  from: " + literal.getLocation() + "\n");
 
 
-                        Query q = new Query(this.QI.getName(), this.processID, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                        Query q = new Query(this.QI.getName(), this.processID, false, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
                         QI.sendQueryToPeer(q);
                         queryResponse = this.dr.take();
 

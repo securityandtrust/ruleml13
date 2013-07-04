@@ -22,4 +22,6 @@ public interface QueryInterface {
 
     public void consoleOutput(Object o);
 
+    public void incomingQuery(Object o);
+
 }

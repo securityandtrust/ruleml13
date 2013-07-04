@@ -115,12 +115,14 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
             if (particles[0].equals("help"))
             {
-               consoleOutput("To list all the knowledge base rules, write -list");
-               consoleOutput("To remove a local/remote rule, write -remove L# , or -remove M#" );
-               consoleOutput("To add a local rule, write for ex, -add L0:-> ~emergency_local");
-               consoleOutput("To add a remote rule, write for ex, -add M0: test1_ARM, test2_MedProfile -> test3_HCS");
-               consoleOutput("To list the preference order, write: -pref");
-               consoleOutput("To change the preference order, write: -setpref ARM, HCS, Bracelet");
+               consoleOutput("To view the local knowledge base, type -list");
+               consoleOutput("To view the list of variables inside the knowledge base, type -listvar");
+               consoleOutput("To remove a local/mapping rule, type -remove L# or -remove M#" );
+               consoleOutput("To add a local rule, type for ex -add L: -> ~emergency_local");
+               consoleOutput("To add a mapping rule, type for ex -add M: lyingOnFloor_ARM- > emergency_local");
+               consoleOutput("To view the local preferences, type -pref");
+               consoleOutput("To change the preference order, type for ex -setpref Bracelet, MedProfile, Arm");
+               consoleOutput("To modify an existing local/mapping rule, type for ex. -modify L0: -> emergency_local");
                 // consoleOutput("To quit, write -quit");
             }
             else if (particles[0].equals("add"))
@@ -132,23 +134,46 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
                     kb.AddLine(s,this.name);
                     consoleOutput("Rule added");
                 } catch (Throwable throwable) {
-                    consoleOutput("Error adding the rule");
+                    consoleOutput("Error adding the rule ");
                 }
 
             }
             else if (particles[0].equals("remove"))
             {
                 try{
-              kb.removeRule(this, particles[1].trim());
+              kb.removeRule(this, particles[1].trim(),true);
                 }
                 catch(Exception ex)
                 {
                     consoleOutput("Invalid command");
                 }
             }
+            else if (particles[0].equals("listvar"))
+            {
+                consoleOutput(kb.getAllLiteral());
+            }
+
+            else if (particles[0].equals("modify"))
+            {
+                try{
+                    String[] part2 = particles[1].split(":");
+                    kb.removeRule(this, part2[0].trim(),false);
+                    s=s.substring(s.indexOf("modify")+6,s.length()).trim();
+                   // System.out.println(s);
+                    kb.AddLine(s,this.name);
+                    consoleOutput("Rule modified");
+                }
+                catch(Exception ex)
+                {
+                    consoleOutput("Error Deleting the rule");
+                } catch (Throwable throwable) {
+                    consoleOutput("Error Updating the rule");
+                }
+            }
 
             else if (particles[0].equals("list"))
             {
+                System.out.println("listing");
                 kb.listRules(this);
             }
             else if (particles[0].equals("pref"))
@@ -222,7 +247,7 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
             String[] literalString = s.split("~");
 
 
-            Query qTemp = new Query(this.name, id, this.name, new Literal(((literalString.length > 1) ? literalString[1].trim() : literalString[0].trim()), "local", sign), false, new LinkedList(), new LinkedList(), new LinkedList());
+            Query qTemp = new Query(this.name, id, true, this.name, new Literal(((literalString.length > 1) ? literalString[1].trim() : literalString[0].trim()), "local", sign), false, new LinkedList(), new LinkedList(), new LinkedList());
             Drop dr = new Drop();
             QueryServantSimpleAnswers qssa = new QueryServantSimpleAnswers(this.kb, this, qTemp, id, dr);
             qsArray.put(id, qssa);
@@ -240,7 +265,7 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
         //System .out .println("in send results");
         if (quest.getOwner().equals(this.name)) {
 
-            String s = "query Servant responded for " + quest.getLiteral() + ": ";
+            String s = "query Servant responded for " + quest.getLiteral().getSignWithName() + ": ";
             if (resp.isBooleanAnswer())
                 s += resp.getReturnValue();
             //else
@@ -248,7 +273,10 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
             // printReceivedSet(" Supporting set: ", resp.getSupportingSet());
             //printReceivedSet(" Conflicting set: ", resp.getConflictingSet());
-            consoleOutput(s);
+
+            if(quest.getInitiatorIsConsole())
+                consoleOutput(s);
+            incomingQuery(resp);
 
         } else {
             queryOutput(resp);
@@ -270,6 +298,8 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
     }
 
 
+
+
     @Start
     public void start() {
         this.name = (String) getDictionary().get("Name");
@@ -283,10 +313,11 @@ public class QueryComponent extends org.kevoree.framework.AbstractComponentType 
 
 
             if (initKb != null && initKb != "") {
-                kb.loadKbFromFile(initKb, this.name);
-                consoleOutput("Kb loaded:");
-                consoleOutput(kb.getAllLiteral());
+               kb.loadKbFromFile(initKb, this.name);
+                consoleOutput("Local component name is: " + this.name);
+               // consoleOutput(kb.getAllLiteral());
                 consoleOutput("To get help about the commands write -help");
+                consoleOutput(kb.getAllLiteral());
             }
             if (initTrust != null && initTrust != "") {
                 kb.loadTrustOrderFromFile(initTrust);

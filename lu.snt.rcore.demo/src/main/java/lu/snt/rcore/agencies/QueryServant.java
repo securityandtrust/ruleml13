@@ -37,7 +37,7 @@ public abstract class QueryServant extends Thread
     protected static int outOfProportion = -2;
     protected Literal literal, queryLiteral;
     protected MyBoolean localAnswer;
-    protected AnswerSet cachedAnswer;
+    //protected AnswerSet cachedAnswer;
     protected LinkedList currLocalHistory, supportingRules, inheritedHistory, bequeathHistory;
     protected LinkedList suppForLiteral, conflForLiteral;
     protected Collection inheritedSupportingRules, inheritedConflictingRules, rulesCollection;
