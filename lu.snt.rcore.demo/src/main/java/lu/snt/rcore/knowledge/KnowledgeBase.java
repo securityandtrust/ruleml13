@@ -73,7 +73,6 @@ public class KnowledgeBase
         // System.out.println("Added sse" + setName);
     }
 
-
     public void AddLine(String processedLine, String peerName) throws Throwable {
 
         try {
@@ -95,32 +94,34 @@ public class KnowledgeBase
                 ruleParts[0] = ruleParts[0].trim();
                 ruleParts[1] = ruleParts[1].trim();
 
-               // System.out.println(ruleParts[0].length());
+             //  System.out.println(ruleParts[0].length());
                 if (ruleParts[0].length() == 0) {
 
                     sign = getSign(ruleParts[1]);
-                   // System.out.println(" * " + ruleParts[1] + " " + sign);
+                 //   System.out.println(" * " + ruleParts[1] + " " + sign);
                     literalString = ruleParts[1].split("~");
                     literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
                     tmpArray2 = literal.split("_");
 
-                  //  System.out.println(" + " + literal + " " + sign);
+               //  System.out.println(" ok till");
 
 
-                    if (tmpArray2[1].equals("local")) {
-                        this.addLocalLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
-                   //      System.out.println("p " + tmpArray2[0]);
-                    } else if (tmpArray2[1].equals(peerName)) {
+                    if (tmpArray2[1].equals("local")||tmpArray2[1].equals(peerName)) {
+                        this.addLocalLiteral(new Literal(tmpArray2[0], "local", sign));
+               //       System.out.println("p " + tmpArray2[0]);
+                    }
+                    else
+                    {
                         this.addRemoteLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
                     }
 
                     setName[0]  = lineParticles[0].charAt(0);
                     if( setName[0]!='L' &&setName[0]!='M' )
                         throw new Exception("Invalid set Name");
-                   // System.out.println("sets :"+ setName[0]+"");
+               //  System.out.println("sets :"+ setName[0]+"");
                     this.addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0], lineParticles[0]));
 
-                  //  System.out.println(" -p  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
+            //  System.out.println(" -p  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
                 } else {
                     body = ruleParts[0].split(",");
                     bodyList = new LinkedList();
@@ -133,17 +134,19 @@ public class KnowledgeBase
                         tmpArray = literal.split("_");
                         bodyList.add(new Literal(tmpArray[0], tmpArray[1], sign));
 
-                    //     System.out.println(" + " + literal + " " + sign);
+                  //     System.out.println(" + " + literal + " " + sign);
 
-                        if (tmpArray[1].equals("local")) {
-                            addLocalLiteral(new Literal(tmpArray[0], tmpArray[1], sign));
-                      //      System.out.println(tmpArray[0]);
-                        } else if (tmpArray[1].equals(peerName)) {
+                        if (tmpArray[1].equals("local")||tmpArray[1].equals(peerName)) {
+                            this.addLocalLiteral(new Literal(tmpArray[0], "local", sign));
+                        }
+                        else
+                        {
                             this.addRemoteLiteral(new Literal(tmpArray[0], tmpArray[1], sign));
                         }
 
 
-                     //    System.out.println(" --" + tmpArray[0] +" "+ tmpArray[1] + " "+sign);
+
+                 //       System.out.println(" --" + tmpArray[0] +" "+ tmpArray[1] + " "+sign);
                     }
 
                     literalString = null;
@@ -151,30 +154,31 @@ public class KnowledgeBase
                     ruleParts[1] = ruleParts[1].trim();
 
                     sign = getSign(ruleParts[1]);
-                  //   System.out.println(" _ " + ruleParts[1] + " " + sign);
+                //    System.out.println(" _ " + ruleParts[1] + " " + sign);
                     literalString = ruleParts[1].split("~");
                     literal = ((literalString.length > 1) ? literalString[1] : literalString[0]);
                     tmpArray2 = literal.split("_");
 
-                  //   System.out.println(" + " + literal + " " + sign);
+            //  System.out.println(" + " + literal + " " + sign);
 
 
-                    if (tmpArray2[1].equals("local")) {
-                        addLocalLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
-                 //        System.out.println(tmpArray2[0]);
-                    } else if (tmpArray2[1].equals(peerName)) {
+                    if (tmpArray2[1].equals("local")||tmpArray2[1].equals(peerName)) {
+                        addLocalLiteral(new Literal(tmpArray2[0],"local", sign));
+               //    System.out.println(tmpArray2[0]);
+                    } else
+                    {
                         this.addRemoteLiteral(new Literal(tmpArray2[0], tmpArray2[1], sign));
                     }
 
-                  //       System.out.println(" __" + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
-                  //       System.out.println(sign + " " + ((literalString.length>1) ? literalString[1]:literalString[0]));
+                  //      System.out.println(" __" + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
+                 //      System.out.println(sign + " " + ((literalString.length>1) ? literalString[1]:literalString[0]));
 
                     setName[0] = lineParticles[0].charAt(0);
-                 //       System.out.println("Before Error");
-                    addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0],
-                  //       System.out.println("After Error");
-                 //    System.out.println(" --  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
-                     // System.out.println("File "+ filename+ " loaded successfully");
+                 //    System.out.println("Before Error");
+                    addRule((setName[0] + "").trim(), new Rule(new Literal(tmpArray2[0], tmpArray2[1], sign), lineParticles[0], lineParticles[0], bodyList));
+               //       System.out.println("After Error");
+               //      System.out.println(" --  setName=" + setName[0] + " " + tmpArray2[0] +" "+ tmpArray2[1] + " "+sign);
+             // System.out.println("File loaded successfully");
                 }
             }
         }
@@ -214,7 +218,7 @@ public class KnowledgeBase
             Iterator iter = trustOrder.iterator();
             while(iter.hasNext())
             {
-                s+= (String) iter.next() +" ,";
+                s+= (String) iter.next() +", ";
             }
             s=s.substring(0,s.length()-2);
             qr.consoleOutput(s);
@@ -234,7 +238,6 @@ public class KnowledgeBase
 
         try {
             br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)));
-            //br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             while (br.ready()) {
                 processedLine = br.readLine();
                 if (processedLine.length() > 2) {
@@ -266,37 +269,26 @@ public class KnowledgeBase
             s += "Local Literals: ";
             while (iter.hasNext()) {
                 literal = (Literal) iter.next();
-                s += literal + " , ";
+                s += literal.getName() + " , ";
             }
             s = s.substring(0, s.length() - 2);
             s += "\n";
         }
-        iter = remoteLiteralList.iterator();
+
+        /*iter = remoteLiteralList.iterator();
         if (iter.hasNext()) {
             s += "Remote Literals: ";
             while (iter.hasNext()) {
                 literal = (Literal) iter.next();
-                s += literal + " , ";
+                s += literal.fullNameUnsigned()+" , ";
             }
             s = s.substring(0, s.length() - 2);
             s += "\n";
-        }
+        }      */
 
         return s;
     }
 
-
-    public void print() {
-        Iterator iter;
-        Literal literal;
-
-        iter = localLiteralList.iterator();
-
-        while (iter.hasNext()) {
-            literal = (Literal) iter.next();
-            System.out.println(literal);
-        }
-    }
 
     public void addRule(String setName, Rule rule)
             throws Throwable {
@@ -333,6 +325,7 @@ public class KnowledgeBase
     }
 
 
+
     public void addLocalLiteral(Literal literal) {
         if (isLocalLiteralInside(literal) == false)
             localLiteralList.add(literal);
@@ -352,7 +345,7 @@ public class KnowledgeBase
         while (iter.hasNext()) {
             literal = (Literal) iter.next();
             //System.out.println(literal.getName());
-            if ((literal.getName()).equals(l.getName()) && (literal.getSign() == l.getSign())) {
+            if ((literal.getName()).equals(l.getName())) {
                 //System.out.println(literal.getName());
                 return (true);
             }
@@ -370,7 +363,7 @@ public class KnowledgeBase
         while (iter.hasNext()) {
             literal = (Literal) iter.next();
             //System.out.println(literal.getName());
-            if ((literal.getName()).equals(l.getName()) && (literal.getSign() == l.getSign())) {
+            if ((literal.getName()).equals(l.getName())) {
                 //System.out.println(literal.getName());
                 return (true);
             }
@@ -379,7 +372,7 @@ public class KnowledgeBase
         return (false);
     }
 
-    public void removeRule(QueryInterface qr, String rNum){
+    public void removeRule(QueryInterface qr, String rNum, boolean display){
         if(rNum.charAt(0)=='L'||rNum.charAt(0)=='M')
         {
             String cc = rNum.substring(0,1);
@@ -406,7 +399,24 @@ public class KnowledgeBase
                             {
                                 rule = (Rule) iter2.next();
                                 rules.remove(rule) ;
-                                qr.consoleOutput("Rule Removed!");
+                                if(rules.isEmpty())
+                                {
+                                    h.values().remove(rules) ;
+                                    if(isLiteralInside(rule.getHead())==false)
+                                    {
+                                        try{
+                                                removeLiteral(rule.getHead().getName());
+                                        }
+                                        catch(Exception ex )
+                                        {
+
+                                        }
+                                    }
+
+                                }
+
+                                if(display)
+                                    qr.consoleOutput("Rule Removed!");
                                 return;
                             }
                             else
@@ -570,14 +580,90 @@ public class KnowledgeBase
     public Collection getRulesByHeadLiteral(String setName, Literal l)
             throws Throwable {
         Hashtable h;
-        Rule storedRule;
-        LinkedList rules;
+
+        LinkedList rule = new LinkedList();
+        LinkedList rules1, rules2;
         Iterator r;
 
         h = (Hashtable) knowledgeSet.get(setName);
-        rules = (LinkedList) h.get(l.getName());
+        rules1 = (LinkedList) h.get(l.getSignWithName());
+        l.reverseSign();
+        rules2 = (LinkedList) h.get(l.getSignWithName());
+        l.reverseSign();
 
-        return (rules);
+
+        uniteSets(rule,rules1);
+        uniteSets(rule,rules2);
+        return (rule);
+    }
+
+
+    public boolean isLiteralInside(Literal l) {
+        Hashtable h;
+        LinkedList rules;
+        Rule storedRule;
+
+        boolean temp=l.getSign();
+
+        h = (Hashtable) knowledgeSet.get("L");
+        if (h != null)
+        {
+
+        rules = (LinkedList) h.get(l.getSignWithName());
+        if (rules != null) {
+        try
+        {
+            storedRule = (Rule) rules.getFirst();
+            return (true);
+        }
+        catch(Exception x )
+        {
+        }
+        }
+            l.reverseSign();
+            rules = (LinkedList) h.get(l.getSignWithName());
+            if (rules != null) {
+                try
+                {
+                    storedRule = (Rule) rules.getFirst();
+                    return (true);
+                }
+                catch(Exception x )
+                {
+                }
+            }
+        }
+        h = (Hashtable) knowledgeSet.get("M");
+        if (h != null)
+        {
+            rules = (LinkedList) h.get(l.getName());
+            if (rules != null) {
+                try
+                {
+                    storedRule = (Rule) rules.getFirst();
+                    return (true);
+                }
+                catch(Exception x )
+                {
+                }
+            }
+            l.reverseSign();
+            rules = (LinkedList) h.get(l.getName());
+            if (rules != null) {
+                try
+                {
+                    storedRule = (Rule) rules.getFirst();
+                    return (true);
+                }
+                catch(Exception x )
+                {
+                }
+            }
+        }
+        if(l.getSign()!=temp)
+            l.reverseSign();
+
+        return false;
     }
 
     public boolean isRuleInside(String setName, Literal l) {
@@ -585,28 +671,36 @@ public class KnowledgeBase
         LinkedList rules;
         Rule storedRule;
 
-        //System .out .println("Inside isRuleInside setName "+ setName+" "+ l.getName() );
+    //    System .out .println("Inside isRuleInside setName "+ setName+" "+ l.getSignWithName() );
         h = (Hashtable) knowledgeSet.get(setName);
 
         if (h == null)
             return (false);
 
-        rules = (LinkedList) h.get(l.getName());
+        rules = (LinkedList) h.get(l.getSignWithName());
+
+
 
         if (rules == null) {
-            //System .out .println("null rules ss");
+     //       System .out .println("null rules");
             return (false);
         }
+       // System .out .println("Rule size is: "+rules.size());
 
            try
            {
         storedRule = (Rule) rules.getFirst();
-
-
         if ((storedRule.getHead()).getSign() == l.getSign())
+        {
+    //        System .out .println("returning true rule inside");
             return (true);
+
+        }
         else
+        {
+     //       System .out .println("returning false rule inside");
             return (false);
+           }
            }
            catch(Exception x )
            {
@@ -615,11 +709,31 @@ public class KnowledgeBase
 
     }
 
+    public void removeLiteral(String name)
+    {
+       Iterator iter = localLiteralList.iterator();
+        while(iter.hasNext())
+        {
+            Literal l = (Literal) iter.next();
+            if (l.getName().equals(name)  )
+                localLiteralList.remove(l);
+        }
+         iter = remoteLiteralList.iterator();
+        while(iter.hasNext())
+        {
+            Literal l = (Literal) iter.next();
+            if (l.getName().equals(name)  )
+                remoteLiteralList.remove(l);
+        }
 
+    }
 
     // SetA is the augmented one
     public void uniteSets(Collection setA, Collection setB) {
         Iterator iter;
+
+        if(setB==null)
+            return;
 
         iter = setB.iterator();
 
