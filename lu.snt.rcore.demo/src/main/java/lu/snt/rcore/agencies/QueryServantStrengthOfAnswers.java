@@ -103,7 +103,7 @@ public class QueryServantStrengthOfAnswers
                         conflForLiteral = new LinkedList();
                         System.out.println("\tRequesting literal: " + literal.getSignWithName() + "  from: " + literal.getLocation() + "\n");
 
-                        Query q = new Query(this.QI.getName(), this.processID, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                        Query q = new Query(this.QI.getName(), this.processID,false, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
                         QI.sendQueryToPeer(q);
                         queryResponse = this.dr.take();
 
@@ -165,7 +165,7 @@ public class QueryServantStrengthOfAnswers
                         conflForLiteral = new LinkedList();
                         System.out.println("\tRequesting literal: " + literal.getSignWithName() + "  from: " + literal.getLocation() + "\n");
 
-                        Query q = new Query(this.QI.getName(), this.processID, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                        Query q = new Query(this.QI.getName(), this.processID, false, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
                         QI.sendQueryToPeer(q);
                         queryResponse = this.dr.take();
 

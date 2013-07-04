@@ -34,8 +34,8 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
             inheritedSupportingRules = query.getSupportingMappings();
             inheritedConflictingRules = query.getConflictingMappings();
 
-            //System.out.println("\n\n |||||| New query session ||||||\n");
-            //System.out.println("\tLocal reasoning for: " + queryLiteral.getSignWithName());
+            System.out.println("\n\n |||||| New query session ||||||\n");
+            System.out.println("\tLocal reasoning for: " + queryLiteral.getSignWithName());
 
             /*
             if((cachedAnswer=incQueriesCache.getAnswerForLiteral(queryLiteral))!=null)
@@ -49,32 +49,32 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                 return;
             }
             */
-           // System.out.println("you are querying about: "+ queryLiteral);
+            System.out.println("you are querying about: "+ queryLiteral);
             if (kb.isRuleInside(KnowledgeBase.localSetName, queryLiteral)) {
-               // System.out.println("First Step");
+                System.out.println("First Step");
                 localAnswer = new MyBoolean(false);
-              //    System.out.println("Sec Step");
+                  System.out.println("Sec Step");
                 currLocalHistory.add(queryLiteral);
-              //    System.out.println("third Step");
+                  System.out.println("third Step");
                 local_alg(queryLiteral, currLocalHistory, localAnswer);
-             // System.out.println("4 Step");
+              System.out.println("4 Step");
                 if (localAnswer.getMyBoolean()) {
-             //       System.out.println("local true");
-             //       System.out.println("  Answer: " + localAnswer.getMyBoolean());
+                    System.out.println("local true");
+                    System.out.println("  Answer: " + localAnswer.getMyBoolean());
                     //incQueriesCache.rememberLiteral(queryLiteral, localAnswer, null);
-             //      System.out.println("Result Answer: " + localAnswer.getMyBoolean());
+                  System.out.println("Result Answer: " + localAnswer.getMyBoolean());
                     QI.sendResults(new QueryResponse(query, localAnswer, null, null), this.processID);
                     return;
                 }
             }
-       //     System.out.println("reverse Step");
+           System.out.println("reverse Step");
 
             queryLiteral.reverseSign();
 
 
             if (kb.isRuleInside("L", queryLiteral)) {
 
-           //     System.out.println("inside1 Step");
+                System.out.println("inside1 Step");
 
                 localAnswer = new MyBoolean(false);
                 currLocalHistory.clear();
@@ -84,6 +84,7 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
                 if (localAnswer.getMyBoolean()) {
                     localAnswer.setMyBoolean(false);
                     queryLiteral.reverseSign();
+                    System.out.println("inside2 Step");
                     //incQueriesCache.rememberLiteral(queryLiteral, localAnswer, null);
                     QI.sendResults(new QueryResponse(query, localAnswer, null, null), this.processID);
                     return;
@@ -94,7 +95,7 @@ public class QueryServantSimpleAnswers extends QueryServant implements Runnable 
 
             queryLiteral.reverseSign();
 
-           // System.out.println("reverse1 Step");
+            System.out.println("reverse1 Step");
 
             ////////////////////////////////////////////////////////////////////////
             ////////////// distributed reasoning for supporting rules //////////////

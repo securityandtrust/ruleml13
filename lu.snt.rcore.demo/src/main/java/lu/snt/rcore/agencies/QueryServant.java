@@ -185,6 +185,8 @@ public abstract class QueryServant extends Thread
 
     public void local_alg(Literal queryLiteral, Collection localHist, MyBoolean localAnswer)
             throws Throwable {
+
+        //System.out.println("inside local alg, solving "+queryLiteral.fullName()) ;
         Iterator body, rules, valuesIterator;
         Literal literal;
         Collection rulesCollection, literalValues;
@@ -194,7 +196,7 @@ public abstract class QueryServant extends Thread
 
         try {
             literalValues = new LinkedList();
-            rulesCollection = (Collection) kb.getRulesByHeadLiteral("L", queryLiteral);
+            rulesCollection = (Collection) kb.getSignedRulesByHeadLiteral("L", queryLiteral);
         } catch (UnknownRuleException ure) {
             localAnswer.setMyBoolean(false);
             return;
@@ -208,6 +210,7 @@ public abstract class QueryServant extends Thread
 
             if (body == null) {
                 localAnswer.setMyBoolean(true);
+          //      System.out.println("Local alg for "+queryLiteral.fullName()+ "= true") ;
                 return;    // termination condition
             }
 
@@ -220,6 +223,7 @@ public abstract class QueryServant extends Thread
                     localHist.add(new String(literal.getName()));
                     literalLocalAnswer = new MyBoolean(false);
                     local_alg(literal, localHist, literalLocalAnswer);
+                //    System.out.println("Literal val add"+literal.fullName()+ literalLocalAnswer.getMyBoolean()) ;
                     literalValues.add(literalLocalAnswer);
                 }
             }
@@ -229,10 +233,12 @@ public abstract class QueryServant extends Thread
             while (valuesIterator.hasNext())
                 if (((MyBoolean) valuesIterator.next()).getMyBoolean() == false) {
                     localAnswer.setMyBoolean(false);
+             //       System.out.println("Local alg for final "+queryLiteral.fullName()+ "= false") ;
                     return;
                 }
 
             localAnswer.setMyBoolean(true);
+          //  System.out.println("Local alg for final2 "+queryLiteral.fullName()+ "= true") ;
             return;
         }
     }

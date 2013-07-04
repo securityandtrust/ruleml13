@@ -33,7 +33,7 @@ public class QueryServantComplexSets
             inheritedSupportingRules = query.getSupportingMappings();
             inheritedConflictingRules = query.getConflictingMappings();
 
-            System.out.println("\n\n |||||| New query session ||||||\n");
+       //     System.out.println("\n\n |||||| New query session ||||||\n");
 
             System.out.print("\tLocal reasoning for: " + queryLiteral.getSignWithName());
 
@@ -70,7 +70,7 @@ public class QueryServantComplexSets
                 local_alg(queryLiteral, currLocalHistory, localAnswer);
 
                 if (localAnswer.getMyBoolean()) {
-                    System.out.println("  Answer: " + localAnswer.getMyBoolean());
+             //       System.out.println("  Answer: " + localAnswer.getMyBoolean());
                     //incQueriesCache.rememberLiteral(queryLiteral, localAnswer, null);
                     QI.sendResults(new QueryResponse(query, localAnswer, null, null), this.processID);
                     return;
@@ -87,7 +87,7 @@ public class QueryServantComplexSets
 
                 if (localAnswer.getMyBoolean()) {
                     localAnswer.setMyBoolean(false);
-                    System.out.println("  Answer: " + localAnswer.getMyBoolean());
+             //       System.out.println("  Answer: " + localAnswer.getMyBoolean());
                     queryLiteral.reverseSign();
                     //incQueriesCache.rememberLiteral(queryLiteral, localAnswer, null);
                     queryLiteral.reverseSign();
@@ -132,7 +132,7 @@ public class QueryServantComplexSets
                         suppForLiteral = new LinkedList();
                         conflForLiteral = new LinkedList();
                         System.out.println("\tRequesting literal: " + literal.getSignWithName() + "  from: " + literal.getLocation() + "\n");
-                        Query q = new Query(this.QI.getName(), this.processID, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                        Query q = new Query(this.QI.getName(), this.processID, false, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
                         QI.sendQueryToPeer(q);
                         queryResponse = this.dr.take();
 
@@ -231,7 +231,7 @@ public class QueryServantComplexSets
                         conflForLiteral = new LinkedList();
                         System.out.println("\tRequesting literal: " + literal.getSignWithName() + "  from: " + literal.getLocation() + "\n");
 
-                        Query q = new Query(this.QI.getName(), this.processID, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
+                        Query q = new Query(this.QI.getName(), this.processID, false, literal.getLocation(), literal, false, suppForLiteral, conflForLiteral, bequeathHistory);
                         QI.sendQueryToPeer(q);
                         queryResponse = this.dr.take();
 

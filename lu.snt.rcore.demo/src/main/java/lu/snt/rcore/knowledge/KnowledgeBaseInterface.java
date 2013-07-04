@@ -19,6 +19,8 @@ public interface KnowledgeBaseInterface {
     public void addRule(String setName, Rule rule)
             throws Throwable;
 
-    public Collection getRulesByHeadLiteral(String setName, Literal l)
+    public Collection getSignedRulesByHeadLiteral(String setName, Literal l)
+            throws Throwable;
+    public Collection getAllRulesByHeadLiteral(String setName, Literal l)
             throws Throwable;
 }

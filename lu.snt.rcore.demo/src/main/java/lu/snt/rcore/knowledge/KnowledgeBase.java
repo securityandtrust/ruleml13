@@ -528,8 +528,8 @@ public class KnowledgeBase
         Iterator iter;
         Literal literal;
 
-        setA = getRulesByHeadLiteral(localSetName, l);
-        setB = getRulesByHeadLiteral(remoteSetName, l);
+        setA = getAllRulesByHeadLiteral(localSetName, l);
+        setB = getAllRulesByHeadLiteral(remoteSetName, l);
 
         uniteSets(setA, setB);
 
@@ -557,8 +557,8 @@ public class KnowledgeBase
         Iterator iter;
         Literal literal;
 
-        setA = getRulesByHeadLiteral(localSetName, l);
-        setB = getRulesByHeadLiteral(remoteSetName, l);
+        setA = getAllRulesByHeadLiteral(localSetName, l);
+        setB = getAllRulesByHeadLiteral(remoteSetName, l);
 
         uniteSets(setA, setB);
 
@@ -577,13 +577,12 @@ public class KnowledgeBase
         return (rules);
     }
 
-    public Collection getRulesByHeadLiteral(String setName, Literal l)
+    public Collection getAllRulesByHeadLiteral(String setName, Literal l)
             throws Throwable {
         Hashtable h;
 
         LinkedList rule = new LinkedList();
         LinkedList rules1, rules2;
-        Iterator r;
 
         h = (Hashtable) knowledgeSet.get(setName);
         rules1 = (LinkedList) h.get(l.getSignWithName());
@@ -594,6 +593,19 @@ public class KnowledgeBase
 
         uniteSets(rule,rules1);
         uniteSets(rule,rules2);
+        return (rule);
+    }
+    public Collection getSignedRulesByHeadLiteral(String setName, Literal l)
+            throws Throwable {
+        Hashtable h;
+
+        LinkedList rule = new LinkedList();
+        LinkedList rules1;
+
+        h = (Hashtable) knowledgeSet.get(setName);
+        rules1 = (LinkedList) h.get(l.getSignWithName());
+        uniteSets(rule,rules1);
+
         return (rule);
     }
 
