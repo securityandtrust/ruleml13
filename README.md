@@ -3,10 +3,10 @@ This repository serves the demonstration of the implementation of CDL using [Kev
 We propose here three ways to run the demonstration, from easy to advanced, requiring each time a bit more tools to run.
 
 ## Run the Demonstration (easy)
-1. Download the demonstration launcher [here](http://maven.kevoree.org/ruleml/lu/snt/rcore/lu.snt.rcore.demo.runner/1.1-SNAPSHOT/lu.snt.rcore.demo.runner-1.1-20130703.125404-1.jar)
+1. Download the demonstration launcher [here](http://maven.kevoree.org/ruleml/lu/snt/rcore/lu.snt.rcore.demo.runner/1.1/lu.snt.rcore.demo.runner-1.1.jar)
 2. Open a `Terminal` or `Console`
 3. `cd` into the folder where the launcher has been downloaded
-4. Launch this executable Jar:```java -jar lu.snt.rcore.demo.runner-1.1-20130703.125404-1.jar```
+4. Launch this executable Jar:```java -jar lu.snt.rcore.demo.runner-1.1.jar```
 5. You can then enjoy the demonstration
 6. To end the demo, simply close the `Monitor Screen` that displays the graph.
 
