@@ -20,7 +20,7 @@ For the medium, you need to have Apache Maven installed on your computer.
 4. Enjoy the Demo
 5. Just `ctrl + C` to end the demo.
 
-
+<!--
 ## Run the Demonstration (advanced)
 
 1. Download a **Kevoree Editor** in version **1.9.0** ([here](http://maven.kevoree.org/release/org/kevoree/tools/org.kevoree.tools.ui.editor.standalone/1.9.0/org.kevoree.tools.ui.editor.standalone-1.9.0.jar))
@@ -29,3 +29,10 @@ For the medium, you need to have Apache Maven installed on your computer.
 4. Launch the Kevoree Runtime (`java -jar`)
 5. Launch the Kevoree Editor (`java -jar` or double clic) and open the model of the demonstration you just downloaded
 6. Clic on the node (black box) and just click `push`. The model of the demonstration will then be sent to the runtime.
+-->
+
+## Offline mode
+1. Download a **Kevoree Runtime** in version **1.9.0** ([here](http://maven.kevoree.org/release/org/kevoree/platform/org.kevoree.platform.standalone/1.9.0/org.kevoree.platform.standalone-1.9.0.jar))
+2. Download the model of the demonstration ([here](https://github.com/securityandtrust/ruleml13/raw/master/lu.snt.rcore.demo.runner/src/main/kevs/bootstrap.1.1.kevs))
+3. Place them in the same folder
+4. `cd` in the folder and run the demonstration with `java -Dnode.bootstrap=bootstrap.1.1.kevs -jar org.kevoree.platform.standalone-1.9.0.jar`
