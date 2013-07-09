@@ -5,7 +5,7 @@ addRepo "http://repo.maven.apache.org/maven2"
 merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}'
 merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.fakeDomo/{kevoree.version}'
 merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}'
-merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.1-SNAPSHOT'
+merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.1'
 
 addNode node0:JavaSENode
 addComponent SMSModule@node0:QueryComponent {Name="SMSModule", InitialKnowledgeBaseFile="SMSModuleKB.txt"}
