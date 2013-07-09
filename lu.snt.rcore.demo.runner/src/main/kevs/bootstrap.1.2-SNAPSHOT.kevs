@@ -1,0 +1,83 @@
+addRepo "http://maven.kevoree.org/release"
+addRepo "http://maven.kevoree.org/ruleml"
+addRepo "http://repo.maven.apache.org/maven2"
+
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.fakeDomo/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}'
+merge 'mvn:lu.snt.rcore/lu.snt.rcore.demo/1.2-SNAPSHOT'
+
+addNode node0:JavaSENode
+addComponent SMSModule@node0:QueryComponent {Name="SMSModule", InitialKnowledgeBaseFile="SMSModuleKB.txt"}
+addComponent ARM@node0:QueryComponent {Name="ARM", InitialKnowledgeBaseFile="ARMKB.txt"}
+addComponent Bracelet@node0:QueryComponent {Name="Bracelet", InitialKnowledgeBaseFile="BraceletKB.txt"}
+addComponent HCS@node0:QueryComponent {Name="HCS"         , InitialKnowledgeBaseFile="HCSKB.txt", InitialTrustFile="HCSPref.txt"}
+addComponent MedProfile@node0:QueryComponent {Name="MedProfile", InitialKnowledgeBaseFile="MedProfileKB.txt"}
+addComponent Interceptor@node0:QueryInterceptor
+
+addComponent SMSConsole@node0:FakeConsole
+addComponent ArmConsole@node0:FakeConsole
+addComponent BraceletConsole@node0:FakeConsole
+addComponent HCSConsole@node0:FakeConsole
+addComponent MedConsole@node0:FakeConsole
+
+addChannel SMSConsoleIn : defMSG {}
+addChannel SMSConsoleOut : defMSG {}
+
+addChannel ARMConsoleIn : defMSG {}
+addChannel ARMConsoleOut : defMSG {}
+
+addChannel BraceletConsoleIn : defMSG {}
+addChannel BraceletConsoleOut : defMSG {}
+
+addChannel HCSConsoleIn : defMSG {}
+addChannel HCSConsoleOut : defMSG {}
+
+addChannel MedConsoleIn : defMSG {}
+addChannel MedConsoleOut : defMSG {}
+
+
+bind SMSModule.ConsoleIn@node0 => SMSConsoleOut
+bind SMSModule.ConsoleOut@node0 => SMSConsoleIn
+bind SMSConsole.showText@node0 => SMSConsoleIn
+bind SMSConsole.textEntered@node0 => SMSConsoleOut
+
+bind ARM.ConsoleIn@node0 => ARMConsoleOut
+bind ARM.ConsoleOut@node0 => ARMConsoleIn
+bind ArmConsole.showText@node0 => ARMConsoleIn
+bind ArmConsole.textEntered@node0 => ARMConsoleOut
+
+bind Bracelet.ConsoleIn@node0 => BraceletConsoleOut
+bind Bracelet.ConsoleOut@node0 => BraceletConsoleIn
+bind BraceletConsole.showText@node0 => BraceletConsoleIn
+bind BraceletConsole.textEntered@node0 => BraceletConsoleOut
+
+bind HCS.ConsoleIn@node0 => HCSConsoleOut
+bind HCS.ConsoleOut@node0 => HCSConsoleIn
+bind HCSConsole.showText@node0 => HCSConsoleIn
+bind HCSConsole.textEntered@node0 => HCSConsoleOut
+
+bind MedProfile.ConsoleIn@node0 => MedConsoleOut
+bind MedProfile.ConsoleOut@node0 => MedConsoleIn
+bind MedConsole.showText@node0 => MedConsoleIn
+bind MedConsole.textEntered@node0 => MedConsoleOut
+
+
+addChannel QueryIn : defMSG {}
+addChannel QueryOut : defMSG {}
+
+bind SMSModule.QueryIn@node0 => QueryIn
+bind SMSModule.QueryOut@node0 => QueryOut
+bind ARM.QueryIn@node0 => QueryIn
+bind ARM.QueryOut@node0 => QueryOut
+bind Bracelet.QueryIn@node0 => QueryIn
+bind Bracelet.QueryOut@node0 => QueryOut
+bind HCS.QueryIn@node0 => QueryIn
+bind HCS.QueryOut@node0 => QueryOut
+bind MedProfile.QueryIn@node0 => QueryIn
+bind MedProfile.QueryOut@node0 => QueryOut
+bind Interceptor.QueryIn@node0 => QueryOut
+bind Interceptor.QueryOut@node0 => QueryIn
+
+
+
